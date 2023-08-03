@@ -69,7 +69,7 @@ public class PrivateEventController {
     public List<ParticipationRequestDto> getEventRequests(@PathVariable Long userId,
                                                           @PathVariable Long eventId) {
         log.info("GET запрос на получение информации о запросах на участие в событии текущего пользователя");
-        return privateEventService.getRequestsByEventIdAndUserId(eventId, userId);
+        return privateEventService.getRequestsByEventIdAndUserId(userId, eventId);
     }
 
 
