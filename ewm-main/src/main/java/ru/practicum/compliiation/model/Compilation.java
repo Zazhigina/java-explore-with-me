@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import ru.practicum.event.model.Event;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity

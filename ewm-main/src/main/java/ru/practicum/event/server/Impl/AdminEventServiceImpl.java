@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.StatsClient;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.enam.EventState;
-import ru.practicum.enam.RequestStatus;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
@@ -20,8 +19,6 @@ import ru.practicum.event.server.AdminEventService;
 import ru.practicum.exception.BadRequestException;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.ValidTimeAndStatusException;
-import ru.practicum.request.dto.RequestCountDto;
-import ru.practicum.request.repository.RequestRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,7 +29,6 @@ import static ru.practicum.category.mapper.CategoryMapper.toCategoryDto;
 import static ru.practicum.enam.EventState.isStatePending;
 import static ru.practicum.enam.EventState.isStatePendingOrCancelled;
 import static ru.practicum.event.mapper.EventMapper.toEventFullDto;
-import static ru.practicum.event.mapper.LocationMapper.toLocationDto;
 import static ru.practicum.user.mapper.UserMapper.toUserShortDto;
 
 @Service
@@ -41,7 +37,6 @@ public class AdminEventServiceImpl implements AdminEventService {
     private final EventRepository repository;
     private final LocationRepository locationRepository;
     private final StatsClient statsClient;
-    private final RequestRepository requestRepository;
 
 
     @Override
@@ -62,22 +57,12 @@ public class AdminEventServiceImpl implements AdminEventService {
             eventIdList.add(event.getId());
         }
 
-        List<RequestCountDto> requestCountDtoList =
-                requestRepository.findRequestCountDtoListByEventId(eventIdList, RequestStatus.CONFIRMED);
-
-        Map<Long, Integer> hits = getStatsFromEvents(eventList);
-        for (Event event : eventList) {
-            event.setViews(hits.getOrDefault(event.getId(), 0));
-        }
-
-        List<EventFullDto> eventFullDtos = eventList.stream()
+        return eventList.stream()
                 .map(e -> toEventFullDto(e,
                         toCategoryDto(e.getCategory()),
                         toUserShortDto(e.getInitiator()),
                         e.getLocation()))
                 .collect(Collectors.toList());
-
-        return eventFullDtos;
     }
 
     @Override
@@ -148,33 +133,4 @@ public class AdminEventServiceImpl implements AdminEventService {
         }
         return hits;
     }
-
-    private RequestCountDto getRequestAllEventBeStatus(Long eventId, RequestStatus status) {
-        RequestCountDto requests = requestRepository.findRequestCountDtoByEventIdAndStatus(eventId, status);
-        return Objects.requireNonNullElseGet(requests, () -> new RequestCountDto(eventId, 0L));
-    }
-
-    private Map<Long, Integer> getStatsFromEvents(List<Event> events) {
-        Map<Long, Integer> hits = new HashMap<>();
-
-        List<Long> eventIds = events.stream()
-                .map(Event::getId)
-                .collect(Collectors.toList());
-
-        List<String> uris = eventIds.stream()
-                .map(i -> "/events/" + i)
-                .collect(Collectors.toList());
-
-        String start = LocalDateTime.now().minusYears(50).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        String end = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        List<ViewStatsDto> viewStatDtos = statsClient.getHit(start, end, uris, true);
-
-        for (ViewStatsDto viewStatDto : viewStatDtos) {
-            String uri = viewStatDto.getUri();
-            hits.put(Long.parseLong(uri.substring(8)), Math.toIntExact(viewStatDto.getHits()));
-        }
-        return hits;
-    }
-
 }

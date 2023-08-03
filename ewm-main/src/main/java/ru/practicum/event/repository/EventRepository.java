@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.practicum.enam.EventState;
-import ru.practicum.enam.RequestStatus;
 import ru.practicum.event.model.Event;
-import ru.practicum.request.dto.RequestCountDto;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

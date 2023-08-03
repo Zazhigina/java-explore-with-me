@@ -2,7 +2,6 @@ package ru.practicum.event.server;
 
 import org.springframework.stereotype.Component;
 import ru.practicum.exception.BadRequestException;
-import ru.practicum.exception.ValidTimeAndStatusException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

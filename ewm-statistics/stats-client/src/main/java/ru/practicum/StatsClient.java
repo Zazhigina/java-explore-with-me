@@ -45,7 +45,7 @@ public class StatsClient extends BaseClient {
         parameters.put("start", start);
         parameters.put("end", end);
         if (uris != null) {
-            parameters.put("uris", uris);
+            parameters.put("uris", String.join(",", uris));
         }
         if (unique) {
             parameters.put("unique", true);

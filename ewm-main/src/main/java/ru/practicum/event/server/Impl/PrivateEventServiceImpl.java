@@ -181,21 +181,6 @@ public class PrivateEventServiceImpl implements PrivateEventService {
                 .build();
     }
 
-    private EventRequestStatusUpdateResult prepareRequestStatusUpdateResult(List<Request> requests, RequestStatus newStatus, Event event) {
-        EventRequestStatusUpdateResult result;
-        switch (newStatus) {
-            case CONFIRMED:
-                result = confirmRequests(requests, event);
-                break;
-            case REJECTED:
-                result = rejectRequests(requests);
-                break;
-            default:
-                throw new ValidationException(String.format("Status %s not supported", newStatus), LocalDateTime.now());
-        }
-        return result;
-    }
-
     private Event getEvent(Long id) {
         return eventRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Event with id=%d  was not found", id), Event.class, LocalDateTime.now()));
     }
@@ -213,56 +198,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         return locationRepository.save(location);
     }
 
-    private List<Request> getRequestsByIds(List<Long> requestIds) {
-        return requestRepository.getAllByIdIn(requestIds);
-    }
-
-    private EventRequestStatusUpdateResult confirmRequests(List<Request> requests, Event event) {
-        List<Request> confirmedRequests = new ArrayList<>();
-        List<Request> rejectedRequests = new ArrayList<>();
-
-        try {
-            for (Request request : requests) {
-                if (event.getParticipants().size() < event.getParticipantLimit()) {
-                    request.setStatus(RequestStatus.CONFIRMED);
-                    confirmedRequests.add(request);
-                    event.getParticipants().add(event.getInitiator());
-                } else {
-                    request.setStatus(RequestStatus.REJECTED);
-                    rejectedRequests.add(request);
-                }
-            }
-            if (!rejectedRequests.isEmpty()) {
-                throw new ValidationException();
-            }
-        } catch (ValidationException exception) {
-            eventRepository.flush();
-            requestRepository.flush();
-            throw new ValidationException("The participant limit has been reached", LocalDateTime.now());
-        }
-
-        eventRepository.flush();
-        requestRepository.flush();
-
-        List<ParticipationRequestDto> confirmedRequestsDto = confirmedRequests.stream().map(RequestMapper::toParticipationRequestDto).collect(Collectors.toList());
-
-        return new EventRequestStatusUpdateResult(confirmedRequestsDto, Collections.emptyList());
-    }
-
-    private EventRequestStatusUpdateResult rejectRequests(List<Request> requests) {
-        for (Request request : requests) {
-            request.setStatus(RequestStatus.REJECTED);
-        }
-        requestRepository.flush();
-
-        List<ParticipationRequestDto> rejectedRequests = requests.stream().map(RequestMapper::toParticipationRequestDto).collect(Collectors.toList());
-
-        return new EventRequestStatusUpdateResult(Collections.emptyList(), rejectedRequests);
-    }
-
     private void validateEventInitiator(Long eventId, Long userId) {
-        User user = getUser(userId);
-        Event event = getEvent(eventId);
+        getUser(userId);
+        getEvent(eventId);
     }
 
     private void validateEvent(Event event, User user) {
@@ -277,28 +215,6 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         }
         validClass.eventTimeCheck(event.getEventDate());
         validateEvent(event, user);
-    }
-
-    private void validateBeforeRequestStatusUpdate(Event event, User user) {
-        if (isParticipantLimitZeroAndNoModerationRequired(event)) {
-            throw new ValidationException("Validation not required for this event.", LocalDateTime.now());
-        }
-        validateEvent(event, user);
-    }
-
-    private boolean isParticipantLimitZeroAndNoModerationRequired(Event event) {
-        return event.getParticipantLimit() == 0 && !event.getRequestModeration();
-    }
-
-    private List<Request> processRequestsForStatusUpdate(List<Long> requestIds, Long eventId) {
-        List<Request> requests = getRequestsByIds(requestIds);
-
-        Optional<List<Request>> reqOp = Optional.of(requests.stream()
-                .filter(request -> Objects.equals(request.getEvent().getId(), eventId))
-                .filter(request -> RequestStatus.PENDING.equals(request.getStatus()))
-                .collect(Collectors.toList()));
-        return reqOp.orElseThrow(() ->
-                new ValidationException("Request must be in PENDING status.", LocalDateTime.now()));
     }
 
     private Map<Long, Integer> getStatsFromEvents(List<Event> events) {

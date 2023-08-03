@@ -39,21 +39,13 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     @Transactional
     public void delete(Long userId) {
-        User user = repository.findById(userId)
+        repository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("User with id=%d was not found", userId),
                         User.class,
                         LocalDateTime.now()));
         repository.deleteById(userId);
     }
 
-    void getUser(Long id) {
-        repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("User with id=%d was not found", id),
-                        User.class,
-                        LocalDateTime.now())
-                );
-    }
 
     private List<User> getUsers(List<Long> ids, Pageable pageable) {
         if (ids != null) {

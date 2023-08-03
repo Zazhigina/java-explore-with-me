@@ -7,7 +7,6 @@ import ru.practicum.enam.EventState;
 import ru.practicum.enam.RequestStatus;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
-import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.ValidationException;
 import ru.practicum.request.dto.ParticipationRequestDto;
@@ -107,19 +106,6 @@ public class RequestServiceImpl implements RequestService {
                 );
     }
 
-    private Request buildRequest(User user, Event event) {
-        Request request = new Request();
-        request.setCreated(LocalDateTime.now());
-        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
-            request.setStatus(RequestStatus.CONFIRMED);
-        } else {
-            request.setStatus(RequestStatus.PENDING);
-        }
-        request.setRequester(user);
-        request.setEvent(event);
-        return request;
-    }
-
     private void validateBeforeCreate(User user, Event event) {
         validateEventIsPublished(event);
         validateUserIsNotInitiator(user, event);
@@ -173,12 +159,6 @@ public class RequestServiceImpl implements RequestService {
                     LocalDateTime.now()
             );
         }
-    }
-
-    private void addConfirmedRequest(Event event) {
-        if (event.getRequestModeration()) return;
-        event.getParticipants().add(event.getInitiator());
-        eventRepository.flush();
     }
 
     private void setStatusCancel(Request request) {

@@ -4,7 +4,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.practicum.compliiation.model.Compilation;
-import ru.practicum.event.model.Event;
 
 import java.util.List;
 
@@ -12,6 +11,4 @@ import java.util.List;
 public interface CompilationRepository extends JpaRepository<Compilation, Long> {
 
     List<Compilation> findAllByPinned(boolean pinned, Pageable pageable);
-
-    List<Event> findAllByIdIn(List<Long> events);
 }

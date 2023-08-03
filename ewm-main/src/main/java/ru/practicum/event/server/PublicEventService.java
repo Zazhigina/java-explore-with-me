@@ -4,7 +4,6 @@ import ru.practicum.enam.SortEvent;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PublicEventService {
