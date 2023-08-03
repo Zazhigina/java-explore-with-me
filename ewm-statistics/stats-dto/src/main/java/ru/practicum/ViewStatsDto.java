@@ -2,12 +2,9 @@ package ru.practicum;
 
 import lombok.*;
 
-@EqualsAndHashCode
-@ToString
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+@Builder
 public class ViewStatsDto {
     private String app;
     private String uri;

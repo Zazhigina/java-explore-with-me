@@ -30,7 +30,11 @@ public class StatsServiceImpl implements StatsService {
     @Override
     @Transactional
     public EndpointHitDto create(EndpointHitDto endpointHitDto) {
-        EndpointHit endpointHit = EndpointHitMapper.toEndpointHit(endpointHitDto);
+        EndpointHit endpointHit = new EndpointHit();
+        endpointHit.setApp(endpointHitDto.getApp());
+        endpointHit.setIp(endpointHitDto.getIp());
+        endpointHit.setUri(endpointHitDto.getUri());
+        endpointHit.setTimestamp(endpointHitDto.getTimestamp());
         return EndpointHitMapper.toEndpointHitDto(statsRepository.save(endpointHit));
     }
 
@@ -52,7 +56,7 @@ public class StatsServiceImpl implements StatsService {
             if (unique) {
                 return ViewStatsMapper.mapToViewStatsDto(statsRepository.getStatsByUrisDistinctIp(startDate, endDate, uris));
             } else {
-                return ViewStatsMapper.mapToViewStatsDto(statsRepository.getStatsByUris(startDate, endDate, uris));
+                return ViewStatsMapper.mapToViewStatsDto(statsRepository.getStatsByUris(startDate, endDate,uris));
             }
         }
     }

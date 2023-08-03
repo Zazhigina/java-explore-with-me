@@ -1,13 +1,14 @@
 package ru.practicum;
 
 import lombok.experimental.UtilityClass;
+import ru.practicum.model.ViewStats;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @UtilityClass
 public class ViewStatsMapper {
-    public static ViewStatsDto toViewStatDto(ru.practicum.model.ViewStats viewStat) {
+    public static ViewStatsDto toViewStatDto(ViewStats viewStat) {
         return ViewStatsDto.builder()
                 .app(viewStat.getApp())
                 .uri(viewStat.getUri())
@@ -15,9 +16,9 @@ public class ViewStatsMapper {
                 .build();
     }
 
-    public static List<ViewStatsDto> mapToViewStatsDto(Iterable<ru.practicum.model.ViewStats> stats) {
+    public static List<ViewStatsDto> mapToViewStatsDto(List<ViewStats> stats) {
         List<ViewStatsDto> result = new ArrayList<>();
-        for (ru.practicum.model.ViewStats stat : stats) {
+        for (ViewStats stat : stats) {
             result.add(toViewStatDto(stat));
         }
         return result;
