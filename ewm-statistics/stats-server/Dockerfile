@@ -1,3 +1,4 @@
-FROM amazoncorretto:11-alpine-jdk
+FROM amazoncorretto:20.0.2-alpine3.17
+ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9091
 COPY ./target/stats-server-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
