@@ -41,5 +41,4 @@ public class Comment {
     @UpdateTimestamp
     @Column(name = "last_updated_on")
     private LocalDateTime lastUpdatedOn;
-    ;
 }
