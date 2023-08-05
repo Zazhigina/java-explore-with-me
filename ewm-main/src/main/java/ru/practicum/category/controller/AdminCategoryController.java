@@ -23,7 +23,7 @@ public class AdminCategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto create(@RequestBody @Validated NewCategoryDto dto) {
+    public CategoryDto create(@RequestBody @Valid NewCategoryDto dto) {
         log.info("POST запрос на добавление категории.");
         return adminCategoryService.create(dto);
     }
