@@ -16,7 +16,7 @@ import ru.practicum.category.server.AdminCategoryService;
 import ru.practicum.exception.ValidationException;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,15 +34,14 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
     @Override
     public void delete(Long catId) {
-        Category category = getCategory(catId);
-        List<Event> eventList = eventRepository.findAll();
-        for (Event event : eventList) {
-            if (event.getCategory().equals(category)) {
-                throw new ValidationException(
-                        "The category is not empty",
-                        LocalDateTime.now());
-            }
+        getCategory(catId);
+        Optional<Event> eventList = eventRepository.findAllByCategoryId(catId);
+        if (!eventList.isEmpty()) {
+            throw new ValidationException(
+                    "The category is not empty",
+                    LocalDateTime.now());
         }
+
         categoryRepository.deleteById(catId);
     }
 

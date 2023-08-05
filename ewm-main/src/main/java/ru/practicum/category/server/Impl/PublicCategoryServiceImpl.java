@@ -38,7 +38,6 @@ public class PublicCategoryServiceImpl implements PublicCategoryService {
     @Override
     @Transactional(readOnly = true)
     public CategoryDto findById(Long id) {
-        getCategory(id);
         return CategoryMapper.toCategoryDto(getCategory(id));
     }
 

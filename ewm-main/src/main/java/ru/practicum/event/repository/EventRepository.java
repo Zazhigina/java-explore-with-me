@@ -67,4 +67,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Set<Event> getByIdIn(Collection<Long> ids);
 
+    Optional<Event> findAllByCategoryId(long categoryId);
 }

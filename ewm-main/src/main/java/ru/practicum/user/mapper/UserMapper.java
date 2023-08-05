@@ -1,5 +1,6 @@
 package ru.practicum.user.mapper;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.user.dto.NewUserRequest;
 import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.dto.UserShortDto;
@@ -9,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class UserMapper {
     public static UserDto toUserDto(User user) {
         return UserDto.builder()

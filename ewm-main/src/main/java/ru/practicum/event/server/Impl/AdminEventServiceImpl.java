@@ -37,6 +37,8 @@ public class AdminEventServiceImpl implements AdminEventService {
     private final EventRepository repository;
     private final LocationRepository locationRepository;
     private final StatsClient statsClient;
+    private static final int MINIMUM_HOURS_FOR_UPDATE_EVENT = 1;
+
 
 
     @Override
@@ -73,7 +75,7 @@ public class AdminEventServiceImpl implements AdminEventService {
         if (!isStatePending(recipient) || !isStatePendingOrCancelled(recipient))
             throw new ValidTimeAndStatusException("Event not pending", LocalDateTime.now());
 
-        if (recipient.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
+        if (recipient.getEventDate().isBefore(LocalDateTime.now().plusHours(MINIMUM_HOURS_FOR_UPDATE_EVENT))) {
             throw new ValidTimeAndStatusException(
                     "The start date of the event to be changed must be no earlier than one hour from the publication date",
                     LocalDateTime.now());
