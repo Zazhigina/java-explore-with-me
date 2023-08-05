@@ -4,12 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,5 +20,6 @@ public class EndpointHitDto {
     @NotBlank(message = "Ip не должен быть пустым")
     private String ip;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @NotNull(message = "Timestamp cannot be empty")
     private LocalDateTime timestamp;
 }
