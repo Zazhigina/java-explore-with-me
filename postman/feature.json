@@ -10,14 +10,27 @@
 			"name": "Добавление комментария",
 			"event": [
 				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function() {\r",
-							"    pm.response.to.be.ok; // код ответа должен быть равен 200 OK\r",
-							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
-							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
-							"}); "
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+							"    pm.response.to.have.status(201);   \r",
+							"    pm.response.to.be.withBody;\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"const target = pm.response.json();\r",
+							"var query = {};\r",
+							"pm.request.url.query.all().forEach((param) => { query[param.key] = param.value});"
 						],
 						"type": "text/javascript"
 					}
@@ -28,7 +41,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"text\": \"Comment for event 5 from user 13\"\r\n}",
+					"raw": "{\r\n    \"text\": \"Comment for event  from user \"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -50,11 +63,11 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "13"
+							"value": "2"
 						},
 						{
 							"key": "eventId",
-							"value": "5"
+							"value": "1"
 						}
 					]
 				}
@@ -75,7 +88,10 @@
 							"    pm.response.to.be.withBody; // ответ должен содержать тело\r",
 							"    pm.response.to.be.json; // и тело ответа должно быть в формате JSON\r",
 							"    pm.expect(body).is.an('array'); // проверяем, что тело ответа является массивом \r",
-							"})"
+							"})\r",
+							"\r",
+							"const source = pm.collectionVariables.get(\"response\");\r",
+							"const target = pm.response.json();"
 						],
 						"type": "text/javascript"
 					}
@@ -84,41 +100,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"const main = async () => {\r",
-							"    const api = new API(pm);\r",
-							"    const rnd = new RandomUtils();\r",
-							"\r",
-							"    try {\r",
-							"        const user = await api.addUser(rnd.getUser());\r",
-							"        const category = await api.addCategory(rnd.getCategory());\r",
-							"        let eventBody = rnd.getEvent(category.id);\r",
-							"        eventBody['requestModeration'] = true\r",
-							"        let event = await api.addEvent(user.id, eventBody);\r",
-							"        event = await api.publishEvent(event.id);\r",
-							"        const submittedUser = await api.addUser(rnd.getUser());\r",
-							"        pm.request.removeQueryParams(['eventId']);\r",
-							"        pm.request.addQueryParams([`eventId=` + event.id]);\r",
-							"        pm.collectionVariables.set('uid', submittedUser.id);\r",
-							"    } catch(err) {\r",
-							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
-							"    }\r",
-							"};\r",
-							"\r",
-							"const interval = setInterval(() => {}, 1000);\r",
-							"\r",
-							"setTimeout(async () => \r",
-							"    {\r",
-							"        try {\r",
-							"            // выполняем наш скрипт\r",
-							"            await main();\r",
-							"        } catch (e) {\r",
-							"            console.error(e);\r",
-							"        } finally {\r",
-							"            clearInterval(interval);\r",
-							"        }\r",
-							"    },  \r",
-							"    100 \r",
-							");"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -167,41 +149,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"const main = async () => {\r",
-							"    const api = new API(pm);\r",
-							"    const rnd = new RandomUtils();\r",
-							"\r",
-							"    try {\r",
-							"        const user = await api.addUser(rnd.getUser());\r",
-							"        const category = await api.addCategory(rnd.getCategory());\r",
-							"        let eventBody = rnd.getEvent(category.id);\r",
-							"        eventBody['requestModeration'] = true\r",
-							"        let event = await api.addEvent(user.id, eventBody);\r",
-							"        event = await api.publishEvent(event.id);\r",
-							"        const submittedUser = await api.addUser(rnd.getUser());\r",
-							"        pm.request.removeQueryParams(['eventId']);\r",
-							"        pm.request.addQueryParams([`eventId=` + event.id]);\r",
-							"        pm.collectionVariables.set('uid', submittedUser.id);\r",
-							"    } catch(err) {\r",
-							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
-							"    }\r",
-							"};\r",
-							"\r",
-							"const interval = setInterval(() => {}, 1000);\r",
-							"\r",
-							"setTimeout(async () => \r",
-							"    {\r",
-							"        try {\r",
-							"            // выполняем наш скрипт\r",
-							"            await main();\r",
-							"        } catch (e) {\r",
-							"            console.error(e);\r",
-							"        } finally {\r",
-							"            clearInterval(interval);\r",
-							"        }\r",
-							"    },  \r",
-							"    100 \r",
-							");"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -267,48 +215,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"const main = async () => {\r",
-							"    const api = new API(pm);\r",
-							"    const rnd = new RandomUtils();\r",
-							"\r",
-							"    try {\r",
-							"        const user = await api.addUser(rnd.getUser());\r",
-							"        const category = await api.addCategory(rnd.getCategory());\r",
-							"        let eventBody = rnd.getEvent(category.id);\r",
-							"        eventBody['requestModeration'] = true\r",
-							"        let event = await api.addEvent(user.id, eventBody);\r",
-							"        event = await api.publishEvent(event.id);\r",
-							"        const submittedUser = await api.addUser(rnd.getUser());\r",
-							"        pm.request.removeQueryParams(['eventId']);\r",
-							"        pm.request.addQueryParams([`eventId=` + event.id]);\r",
-							"        pm.collectionVariables.set('uid', submittedUser.id);\r",
-							"        pm.request.body.update({\r",
-							"            mode: 'raw',\r",
-							"            raw: JSON.stringify({\r",
-							"                title: rnd.getWord(51)\r",
-							"            }),\r",
-							"            options: { raw: { language: 'json' } }\r",
-							"        });\r",
-							"    } catch(err) {\r",
-							"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
-							"    }\r",
-							"};\r",
-							"\r",
-							"const interval = setInterval(() => {}, 1000);\r",
-							"\r",
-							"setTimeout(async () => \r",
-							"    {\r",
-							"        try {\r",
-							"            // выполняем наш скрипт\r",
-							"            await main();\r",
-							"        } catch (e) {\r",
-							"            console.error(e);\r",
-							"        } finally {\r",
-							"            clearInterval(interval);\r",
-							"        }\r",
-							"    },  \r",
-							"    100 \r",
-							");"
+							""
 						],
 						"type": "text/javascript"
 					}
