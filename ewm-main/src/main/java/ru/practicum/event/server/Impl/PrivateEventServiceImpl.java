@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.StatsClient;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
 import ru.practicum.enam.EventState;
 import ru.practicum.enam.RequestStatus;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.LocationDto;
+import ru.practicum.event.mapper.LocationMapper;
 import ru.practicum.event.model.Location;
 import ru.practicum.event.model.update.UpdateEvent;
 import ru.practicum.event.repository.LocationRepository;
@@ -33,6 +35,7 @@ import ru.practicum.request.dto.ParticipationRequestDto;
 import ru.practicum.request.mapper.RequestMapper;
 import ru.practicum.request.model.Request;
 import ru.practicum.request.repository.RequestRepository;
+import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
@@ -41,11 +44,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.practicum.category.mapper.CategoryMapper.toCategoryDto;
-import static ru.practicum.event.mapper.EventMapper.*;
-import static ru.practicum.event.mapper.LocationMapper.toLocation;
-import static ru.practicum.request.mapper.RequestMapper.toParticipationRequestDto;
-import static ru.practicum.user.mapper.UserMapper.toUserShortDto;
+
+;
 
 
 @Service
@@ -72,7 +72,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         Pageable pageable = PageRequest.of(from / size, size);
         List<Event> events = eventRepository.findAllByInitiator_Id(userId, pageable);
         if (events.isEmpty()) return Collections.emptyList();
-        return events.stream().map(e -> toEventShortDto(e, toCategoryDto(e.getCategory()), toUserShortDto(e.getInitiator()))).collect(Collectors.toList());
+        return events.stream().map(e -> EventMapper.toEventShortDto(e, CategoryMapper.toCategoryDto(e.getCategory()), UserMapper.toUserShortDto(e.getInitiator()))).collect(Collectors.toList());
     }
 
     @Override
@@ -82,10 +82,10 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         Category category = getCategory(dto.getCategory());
         Location location = saveLocation(dto.getLocation());
         validClass.eventTimeCheck(dto.getEventDate());
-        Event event = toEvent(dto, category, location, user);
+        Event event = EventMapper.toEvent(dto, category, location, user);
 
         Event savedEvent = eventRepository.save(event);
-        return toEventFullDto(savedEvent, toCategoryDto(savedEvent.getCategory()), toUserShortDto(savedEvent.getInitiator()), savedEvent.getLocation());
+        return EventMapper.toEventFullDto(savedEvent, CategoryMapper.toCategoryDto(savedEvent.getCategory()), UserMapper.toUserShortDto(savedEvent.getInitiator()), savedEvent.getLocation());
     }
 
     @Override
@@ -98,9 +98,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         validateEventInitiator(eventId, userId);
         Map<Long, Integer> hits = getStatsFromEvents(List.of(event));
 
-        EventFullDto eventFullDto = toEventFullDto(event,
-                toCategoryDto(category),
-                toUserShortDto(user),
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event,
+                CategoryMapper.toCategoryDto(category),
+                UserMapper.toUserShortDto(user),
                 location);
 
         eventFullDto.setViews(Math.toIntExact(hits.getOrDefault(eventId, 0)));
@@ -120,9 +120,9 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         Event updatedEvent = eventRepository.save(eventNew);
         Map<Long, Integer> hits = getStatsFromEvents(List.of(event));
 
-        EventFullDto eventFullDto = toEventFullDto(updatedEvent,
-                toCategoryDto(updatedEvent.getCategory()),
-                toUserShortDto(updatedEvent.getInitiator()),
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(updatedEvent,
+                CategoryMapper.toCategoryDto(updatedEvent.getCategory()),
+                UserMapper.toUserShortDto(updatedEvent.getInitiator()),
                 updatedEvent.getLocation());
 
         eventFullDto.setViews(hits.getOrDefault(eventId, 0));
@@ -167,11 +167,11 @@ public class PrivateEventServiceImpl implements PrivateEventService {
             }
             if (RequestStatus.REJECTED == requestStatusUpdate.getStatus()) {
                 r.setStatus(RequestStatus.REJECTED);
-                rejectedRequests.add(toParticipationRequestDto(r));
+                rejectedRequests.add(RequestMapper.toParticipationRequestDto(r));
             }
             if (RequestStatus.CONFIRMED == requestStatusUpdate.getStatus()) {
                 r.setStatus(RequestStatus.CONFIRMED);
-                confirmedRequests.add(toParticipationRequestDto(r));
+                confirmedRequests.add(RequestMapper.toParticipationRequestDto(r));
             }
         });
 
@@ -194,7 +194,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
     }
 
     private Location saveLocation(LocationDto dto) {
-        Location location = toLocation(dto);
+        Location location = LocationMapper.toLocation(dto);
         return locationRepository.save(location);
     }
 

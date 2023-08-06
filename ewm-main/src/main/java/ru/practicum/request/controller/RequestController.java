@@ -29,7 +29,6 @@ public class RequestController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getAllByUserId(@PathVariable @Min(0) long userId) {
         log.info("GET запрос на получение информации о заявках текущего пользователя на участие в чужих событиях");
         return requestService.getAllByUserId(userId);

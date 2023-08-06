@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewCommentDto {
-    @Size(min = 512, message = "text cannot be less more than 512.")
-    String text;
+    @Size(max = 512, message = "text cannot be less more than 512.")
+    private String text;
 }
 

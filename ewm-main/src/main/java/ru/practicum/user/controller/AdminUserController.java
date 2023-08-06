@@ -26,7 +26,6 @@ public class AdminUserController {
     private final AdminUserService userService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<UserDto> getAll(@RequestParam(required = false) List<Long> ids,
                                 @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) int from,
                                 @Positive @RequestParam(value = "size", defaultValue = "10", required = false) int size

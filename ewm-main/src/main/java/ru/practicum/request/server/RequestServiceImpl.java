@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static ru.practicum.request.mapper.RequestMapper.toParticipationRequestDto;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +54,7 @@ public class RequestServiceImpl implements RequestService {
             request.setStatus(RequestStatus.PENDING);
         }
 
-        return toParticipationRequestDto(requestRepository.save(request));
+        return RequestMapper.toParticipationRequestDto(requestRepository.save(request));
     }
 
 
@@ -76,7 +75,7 @@ public class RequestServiceImpl implements RequestService {
         validateBeforeCancel(request, user);
         removeFromEvent(request);
         setStatusCancel(request);
-        return toParticipationRequestDto(request);
+        return RequestMapper.toParticipationRequestDto(request);
     }
 
     private User getUser(Long id) {

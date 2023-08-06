@@ -28,7 +28,6 @@ public class PrivateEventController {
     private final PrivateEventService privateEventService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<EventShortDto> getEventsUser(@PathVariable long userId,
                                              @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) int from,
                                              @Positive @RequestParam(value = "size", defaultValue = "10", required = false) int size
@@ -46,7 +45,6 @@ public class PrivateEventController {
     }
 
     @GetMapping("/{eventId}")
-    @ResponseStatus(HttpStatus.OK)
     public EventFullDto getById(@PathVariable long userId,
                                 @PathVariable long eventId) {
         log.info("GET запрос на получение полной информации о событии добавленном текущим пользователем");
@@ -65,7 +63,6 @@ public class PrivateEventController {
 
 
     @GetMapping("/{eventId}/requests")
-    @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getEventRequests(@PathVariable Long userId,
                                                           @PathVariable Long eventId) {
         log.info("GET запрос на получение информации о запросах на участие в событии текущего пользователя");

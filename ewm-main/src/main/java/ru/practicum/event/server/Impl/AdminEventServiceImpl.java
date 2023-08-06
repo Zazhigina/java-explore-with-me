@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.StatsClient;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.enam.EventState;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.mapper.EventMapper;
@@ -19,17 +20,16 @@ import ru.practicum.event.server.AdminEventService;
 import ru.practicum.exception.BadRequestException;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.ValidTimeAndStatusException;
+import ru.practicum.user.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.practicum.category.mapper.CategoryMapper.toCategoryDto;
 import static ru.practicum.enam.EventState.isStatePending;
 import static ru.practicum.enam.EventState.isStatePendingOrCancelled;
-import static ru.practicum.event.mapper.EventMapper.toEventFullDto;
-import static ru.practicum.user.mapper.UserMapper.toUserShortDto;
+
 
 @Service
 @RequiredArgsConstructor
@@ -58,9 +58,9 @@ public class AdminEventServiceImpl implements AdminEventService {
         }
 
         return eventList.stream()
-                .map(e -> toEventFullDto(e,
-                        toCategoryDto(e.getCategory()),
-                        toUserShortDto(e.getInitiator()),
+                .map(e -> EventMapper.toEventFullDto(e,
+                        CategoryMapper.toCategoryDto(e.getCategory()),
+                        UserMapper.toUserShortDto(e.getInitiator()),
                         e.getLocation()))
                 .collect(Collectors.toList());
     }
@@ -85,9 +85,9 @@ public class AdminEventServiceImpl implements AdminEventService {
 
 
         Event savedEvent = repository.save(eventNew);
-        return toEventFullDto(savedEvent,
-                toCategoryDto(savedEvent.getCategory()),
-                toUserShortDto(savedEvent.getInitiator()),
+        return EventMapper.toEventFullDto(savedEvent,
+                CategoryMapper.toCategoryDto(savedEvent.getCategory()),
+                UserMapper.toUserShortDto(savedEvent.getInitiator()),
                 savedEvent.getLocation());
     }
 

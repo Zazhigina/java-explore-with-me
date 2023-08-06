@@ -20,8 +20,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.practicum.comment.mapper.CommentMapper.toComment;
-import static ru.practicum.comment.mapper.CommentMapper.toCommentDto;
 import static ru.practicum.enam.EventState.isStatePublished;
 
 @Service
@@ -42,6 +40,7 @@ public class CommentServerImpl implements CommentServer {
     }
 
     @Override
+    @Transactional
     public CommentDto patchByUser(Long userId, Long commentId, UpdateCommentDto updateCommentDto) {
         User user = getUser(userId);
         Comment comment = getComment(commentId);
@@ -53,6 +52,7 @@ public class CommentServerImpl implements CommentServer {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CommentDto> getCommentUser(Long userId) {
         getUser(userId);
         List<Comment> commentList = commentRepository.findByAuthorId(userId);
@@ -60,6 +60,7 @@ public class CommentServerImpl implements CommentServer {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CommentDto> getCommentEvent(Long userId, Long eventId) {
         User user = getUser(userId);
         Event event = getEvent(eventId);
@@ -78,7 +79,7 @@ public class CommentServerImpl implements CommentServer {
             throw new EntityNotFoundException(String.format("UserId id=%d can't add " +
                     "comments event not status PUBLISHED EventId id=%d.", userId, eventId), User.class, LocalDateTime.now());
         }
-        return toCommentDto(commentRepository.save(toComment(commentDto, event, user)));
+        return CommentMapper.toCommentDto(commentRepository.save(CommentMapper.toComment(commentDto, event, user)));
     }
 
 

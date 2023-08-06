@@ -4,26 +4,24 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.compliiation.dto.CompilationDto;
 import ru.practicum.compliiation.dto.NewCompilationDto;
 import ru.practicum.compliiation.dto.UpdateCompilationRequest;
+import ru.practicum.compliiation.mapper.CompilationMapper;
 import ru.practicum.compliiation.model.Compilation;
 import ru.practicum.compliiation.repository.CompilationRepository;
 import ru.practicum.compliiation.server.AdminCompilationService;
 import ru.practicum.compliiation.server.PublicCompilationService;
+import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.EntityNotFoundException;
+import ru.practicum.user.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static ru.practicum.category.mapper.CategoryMapper.toCategoryDto;
-import static ru.practicum.compliiation.mapper.CompilationMapper.toCompilation;
-import static ru.practicum.compliiation.mapper.CompilationMapper.toCompilationDto;
-import static ru.practicum.event.mapper.EventMapper.toEventShortDto;
-import static ru.practicum.user.mapper.UserMapper.toUserShortDto;
 
 @Service
 @RequiredArgsConstructor
@@ -41,14 +39,14 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
             events = eventRepository.getByIdIn(newCompilationDto.getEvents());
         }
 
-        Compilation compilation = toCompilation(newCompilationDto, events);
+        Compilation compilation = CompilationMapper.toCompilation(newCompilationDto, events);
 
         Compilation savedCompilation = compilationRepository.save(compilation);
 
-        return toCompilationDto(savedCompilation, events.stream()
-                .map(e -> toEventShortDto(e,
-                        toCategoryDto(e.getCategory()),
-                        toUserShortDto(e.getInitiator())))
+        return CompilationMapper.toCompilationDto(savedCompilation, events.stream()
+                .map(e -> EventMapper.toEventShortDto(e,
+                        CategoryMapper.toCategoryDto(e.getCategory()),
+                        UserMapper.toUserShortDto(e.getInitiator())))
                 .collect(Collectors.toList()));
     }
 
@@ -80,10 +78,10 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
 
         Compilation savedCompilation = compilationRepository.save(compilation);
 
-        return toCompilationDto(savedCompilation, events.stream()
-                .map(e -> toEventShortDto(e,
-                        toCategoryDto(e.getCategory()),
-                        toUserShortDto(e.getInitiator())))
+        return CompilationMapper.toCompilationDto(savedCompilation, events.stream()
+                .map(e -> EventMapper.toEventShortDto(e,
+                        CategoryMapper.toCategoryDto(e.getCategory()),
+                        UserMapper.toUserShortDto(e.getInitiator())))
                 .collect(Collectors.toList()));
     }
 

@@ -29,7 +29,6 @@ public class AdminEventController {
     private final AdminEventService adminEventService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<EventFullDto> getEventsUser(@RequestParam(value = "users", required = false) List<Long> users,
                                             @RequestParam(value = "states", required = false) List<EventState> states,
                                             @RequestParam(value = "categories", required = false) List<Long> categories,
