@@ -55,7 +55,7 @@ public class CommentServerImpl implements CommentServer {
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentUser(Long userId) {
         getUser(userId);
-        List<Comment> commentList = commentRepository.findByAuthorId(userId);
+        List<Comment> commentList = commentRepository.findByAuthor_Id(userId);
         return commentList.stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
     }
 
