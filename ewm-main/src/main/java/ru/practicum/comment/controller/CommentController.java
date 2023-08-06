@@ -23,7 +23,8 @@ public class CommentController {
 
     @PostMapping("/events/{eventId}/comment")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentDto addComment(@PathVariable Long userId, @PathVariable Long eventId,
+    public CommentDto addComment(@PathVariable Long userId,
+                                 @PathVariable Long eventId,
                                  @Valid @RequestBody NewCommentDto newCommentDto) {
         log.info("POST запрос на добавление комментария: {}", newCommentDto);
         return commentServer.createComment(userId, eventId, newCommentDto);
