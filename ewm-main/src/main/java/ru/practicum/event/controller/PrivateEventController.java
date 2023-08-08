@@ -52,7 +52,6 @@ public class PrivateEventController {
     }
 
     @PatchMapping("/{eventId}")
-    @ResponseStatus(HttpStatus.OK)
     public EventFullDto updateEvent(
             @PathVariable Long userId,
             @PathVariable Long eventId,
@@ -71,7 +70,6 @@ public class PrivateEventController {
 
 
     @PatchMapping("/{eventId}/requests")
-    @ResponseStatus(HttpStatus.OK)
     public EventRequestStatusUpdateResult updateEvent(
             @PathVariable Long userId,
             @PathVariable Long eventId,

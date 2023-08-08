@@ -30,15 +30,6 @@ public class CommentServerImpl implements CommentServer {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<CommentDto> getAllComments(Long userId, Long eventId) {
-        List<Comment> comments = commentRepository.findAllByEventId(eventId);
-        return comments.stream()
-                .map(CommentMapper::toCommentDto)
-                .collect(Collectors.toList());
-    }
-
     @Override
     @Transactional
     public CommentDto patchByUser(Long userId, Long commentId, UpdateCommentDto updateCommentDto) {
@@ -65,7 +56,7 @@ public class CommentServerImpl implements CommentServer {
         User user = getUser(userId);
         Event event = getEvent(eventId);
         validEventUser(user, event);
-        List<Comment> commentList = commentRepository.findAllByEventId(userId);
+        List<Comment> commentList = commentRepository.findAllByEventId(eventId);
         return commentList.stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
     }
 

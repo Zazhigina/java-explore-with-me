@@ -35,7 +35,6 @@ public class RequestController {
     }
 
     @PatchMapping("/{requestId}/cancel")
-    @ResponseStatus(HttpStatus.OK)
     public ParticipationRequestDto cancelRequestByRequestor(@PathVariable long userId,
                                                             @PathVariable long requestId) {
         log.info("PATCH запрос на отмену своего запроса на участие в событии");

@@ -31,7 +31,6 @@ public class CommentController {
     }
 
     @PatchMapping("/comment/{commentId}")
-    @ResponseStatus(HttpStatus.OK)
     public CommentDto patchRequestByUser(@PathVariable Long userId, @PathVariable Long commentId,
                                          @Valid @RequestBody UpdateCommentDto updateCommentDto) {
 
@@ -47,7 +46,7 @@ public class CommentController {
         return commentServer.getCommentUser(userId);
     }
 
-    @GetMapping("/events/{eventId}/comment")
+    @GetMapping("/events/{eventId}/comments")
     public List<CommentDto> getRequestListAllCommentsEvent(@PathVariable Long eventId,
                                                            @PathVariable Long userId) {
         log.info("GET запрос на получение всех комментариев своего события с eventId = {} ", eventId);
