@@ -2,6 +2,7 @@ package ru.practicum.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.enam.EventState;
@@ -55,6 +56,7 @@ public class AdminEventController {
 
 
     @PatchMapping("/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
     public EventFullDto update(@PathVariable long eventId,
                                @Valid @RequestBody UpdateEvent request) {
         if (request.getEventDate() != null && request.getEventDate().isBefore(LocalDateTime.now())) {
