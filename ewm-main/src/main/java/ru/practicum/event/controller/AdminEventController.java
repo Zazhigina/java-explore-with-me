@@ -34,8 +34,8 @@ public class AdminEventController {
                                             @RequestParam(value = "categories", required = false) List<Long> categories,
                                             @RequestParam(value = "rangeStart", required = false) String rangeStartString,
                                             @RequestParam(value = "rangeEnd", required = false) String rangeEndString,
-                                            @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) int from,
-                                            @Positive @RequestParam(value = "size", defaultValue = "10", required = false) int size
+                                            @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") int from,
+                                            @Positive @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         log.info("GET запрос на поиск события.");
         LocalDateTime rangeStart = LocalDateTime.now().minusYears(20);
