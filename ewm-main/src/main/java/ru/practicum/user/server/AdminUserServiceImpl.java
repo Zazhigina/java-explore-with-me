@@ -15,7 +15,6 @@ import ru.practicum.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.user.mapper.UserMapper.toUser;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     @Transactional
     public UserDto create(NewUserRequest dto) {
-        User user = toUser(dto);
+        User user = UserMapper.toUser(dto);
         return UserMapper.toUserDto(repository.save(user));
     }
 

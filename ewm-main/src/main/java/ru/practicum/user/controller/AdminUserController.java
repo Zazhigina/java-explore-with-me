@@ -26,10 +26,9 @@ public class AdminUserController {
     private final AdminUserService userService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<UserDto> getAll(@RequestParam(required = false) List<Long> ids,
-                                @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) int from,
-                                @Positive @RequestParam(value = "size", defaultValue = "10", required = false) int size
+                                @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") int from,
+                                @Positive @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         log.info("GET запрос на получение пользователей.");
         return userService.getAll(ids, from, size);

@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.StatsClient;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.enam.EventState;
+import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.exception.BadRequestException;
 import ru.practicum.exception.EntityNotFoundException;
@@ -16,16 +18,12 @@ import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.event.server.PublicEventService;
+import ru.practicum.user.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static ru.practicum.category.mapper.CategoryMapper.toCategoryDto;
-import static ru.practicum.event.mapper.EventMapper.toEventFullDto;
-import static ru.practicum.event.mapper.EventMapper.toEventShortDto;
-import static ru.practicum.user.mapper.UserMapper.toUserShortDto;
 
 @Service
 @RequiredArgsConstructor
@@ -84,7 +82,7 @@ public class PublicEventServiceImpl implements PublicEventService {
             hits = getStatsFromEvents(result);
         }
         List<EventShortDto> eventShortDtos = result.stream()
-                .map(e -> toEventShortDto(e, toCategoryDto(e.getCategory()), toUserShortDto(e.getInitiator())))
+                .map(e -> EventMapper.toEventShortDto(e, CategoryMapper.toCategoryDto(e.getCategory()), UserMapper.toUserShortDto(e.getInitiator())))
                 .collect(Collectors.toList());
 
         for (EventShortDto eventShortDto : eventShortDtos) {
@@ -107,9 +105,9 @@ public class PublicEventServiceImpl implements PublicEventService {
             throw new EntityNotFoundException(String.format("Event with id=%d not PUBLISHED", id), Event.class,
                     LocalDateTime.now());
         }
-        EventFullDto eventFullDto = toEventFullDto(event,
-                toCategoryDto(event.getCategory()),
-                toUserShortDto(event.getInitiator()),
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event,
+                CategoryMapper.toCategoryDto(event.getCategory()),
+                UserMapper.toUserShortDto(event.getInitiator()),
                 event.getLocation());
 
         Map<Long, Integer> hits = getStatsFromEvents(List.of(event));

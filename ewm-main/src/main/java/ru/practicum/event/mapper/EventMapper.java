@@ -19,7 +19,7 @@ import java.util.*;
 @UtilityClass
 public class EventMapper {
 
-    public static EventShortDto toEventShortDto(Event event, CategoryDto categoryDto, UserShortDto initiator) {
+    public EventShortDto toEventShortDto(Event event, CategoryDto categoryDto, UserShortDto initiator) {
         EventShortDto eventShortDto = EventShortDto.builder()
                 .id(event.getId())
                 .category(categoryDto)
@@ -34,7 +34,7 @@ public class EventMapper {
         return eventShortDto;
     }
 
-    public static EventFullDto toEventFullDto(Event event,
+    public  EventFullDto toEventFullDto(Event event,
                                               CategoryDto categoryDto,
                                               UserShortDto initiator,
                                               Location locationDto) {
@@ -58,7 +58,7 @@ public class EventMapper {
                 .build();
     }
 
-    public static Event toEvent(NewEventDto newEventDto,
+    public Event toEvent(NewEventDto newEventDto,
                                 Category category,
                                 Location location,
                                 User initiator) {
@@ -81,7 +81,7 @@ public class EventMapper {
     }
 
 
-    public static Event updateEvent(Event donor, Event recipient) {
+    public Event updateEvent(Event donor, Event recipient) {
         if (recipient.getAnnotation() != null) donor.setAnnotation(recipient.getAnnotation());
         if (recipient.getCategory() != null) donor.setCategory(recipient.getCategory());
         if (recipient.getDescription() != null) donor.setDescription(recipient.getDescription());
@@ -97,7 +97,7 @@ public class EventMapper {
         return donor;
     }
 
-    private static Event toEvent(UpdateEvent updateUserDto) {
+    private Event toEvent(UpdateEvent updateUserDto) {
         Event event = new Event();
         if (updateUserDto.getAnnotation() != null) event.setAnnotation(updateUserDto.getAnnotation());
         if (updateUserDto.getCategory() != null) event.setCategory(
@@ -117,7 +117,7 @@ public class EventMapper {
         return event;
     }
 
-    private static EventState findState(String str) {
+    private EventState findState(String str) {
         if (str == null) return null;
         if (str.equals("CANCEL_REVIEW")) return EventState.CANCELED;
         if (str.equals("PUBLISH_EVENT")) return EventState.PUBLISHED;
@@ -126,14 +126,14 @@ public class EventMapper {
         return null;
     }
 
-    public static Event updateEventAdmin(UpdateEvent adminRequest) {
+    public Event updateEventAdmin(UpdateEvent adminRequest) {
         Event event = toEvent(adminRequest);
         event.setState(findState(String.valueOf(adminRequest.getStateAction())));
         event.setPublishedOn(LocalDateTime.now());
         return event;
     }
 
-    public static Event updateEventUser(UpdateEvent userRequest) {
+    public Event updateEventUser(UpdateEvent userRequest) {
         Event event = toEvent(userRequest);
         event.setState(findState(String.valueOf(userRequest.getStateAction())));
         return event;

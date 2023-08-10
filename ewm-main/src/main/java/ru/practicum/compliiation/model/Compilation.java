@@ -1,10 +1,7 @@
 package ru.practicum.compliiation.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.event.model.Event;
 
 import javax.persistence.*;
@@ -12,7 +9,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "compilations", schema = "public")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

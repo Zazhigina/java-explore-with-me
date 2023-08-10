@@ -18,4 +18,5 @@ public enum EventState {
     public static boolean isStatePublished(Event event) {
         return PUBLISHED.equals(event.getState());
     }
+
 }

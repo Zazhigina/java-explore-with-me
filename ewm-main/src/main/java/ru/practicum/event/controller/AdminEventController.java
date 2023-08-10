@@ -29,14 +29,13 @@ public class AdminEventController {
     private final AdminEventService adminEventService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<EventFullDto> getEventsUser(@RequestParam(value = "users", required = false) List<Long> users,
                                             @RequestParam(value = "states", required = false) List<EventState> states,
                                             @RequestParam(value = "categories", required = false) List<Long> categories,
                                             @RequestParam(value = "rangeStart", required = false) String rangeStartString,
                                             @RequestParam(value = "rangeEnd", required = false) String rangeEndString,
-                                            @PositiveOrZero @RequestParam(value = "from", defaultValue = "0", required = false) int from,
-                                            @Positive @RequestParam(value = "size", defaultValue = "10", required = false) int size
+                                            @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") int from,
+                                            @Positive @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         log.info("GET запрос на поиск события.");
         LocalDateTime rangeStart = LocalDateTime.now().minusYears(20);

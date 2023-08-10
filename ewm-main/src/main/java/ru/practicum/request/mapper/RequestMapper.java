@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class RequestMapper {
 
 
-    public static ParticipationRequestDto toParticipationRequestDto(Request request) {
+    public ParticipationRequestDto toParticipationRequestDto(Request request) {
 
         return ParticipationRequestDto.builder()
                 .id(request.getId())
@@ -23,7 +23,7 @@ public class RequestMapper {
                 .build();
     }
 
-    public static List<ParticipationRequestDto> toParticipationRequestDtoCollection(
+    public List<ParticipationRequestDto> toParticipationRequestDtoCollection(
             Collection<Request> requests) {
         return requests.stream()
                 .map(RequestMapper::toParticipationRequestDto)
